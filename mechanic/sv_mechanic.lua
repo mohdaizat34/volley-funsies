@@ -753,8 +753,11 @@ function KageTossPosition(v,ply,position,power,arc,frontback,timestop,tosstype,a
 					v:GetPhysicsObject():SetAngles(Angle(0, 0, 0))
 					v:GetPhysicsObject():AddAngleVelocity(Vector(0,2000,0)) 
 					timer.Create("serveking",timestop,1,function() 
-						--v:SetPos(ply:GetPos() + Vector(0, 0, 100))     
-						v:GetPhysicsObject():SetVelocity(ply:GetForward() *50 + Vector(0,0,arc))        
+						if isSpiked == true then
+							//if player spike before it king toss stop then cancel the stop motion.
+						else
+							v:GetPhysicsObject():SetVelocity(ply:GetForward() *50 + Vector(0,0,arc))  
+						end      
 					end)
 					ply:EmitSound("toss2.mp3", 70, 100, 1, CHAN_AUTO )
 			--ply:SetVelocity( ply:GetAimVector() * 1000 )  
@@ -771,8 +774,11 @@ function KageTossPosition(v,ply,position,power,arc,frontback,timestop,tosstype,a
 					v:GetPhysicsObject():SetAngles(Angle(0, 0, 0))
 					v:GetPhysicsObject():AddAngleVelocity(Vector(0,2000,0)) 
 					timer.Create("serveking",timestop,1,function() 
-						--v:SetPos(ply:GetPos() + Vector(0, 0, 100))     
-						v:GetPhysicsObject():SetVelocity(ply:GetForward() *50 + Vector(0,0,arc))      
+						if isSpiked == true then
+							//if player spike before it king toss stop then cancel the stop motion.
+						else
+							v:GetPhysicsObject():SetVelocity(ply:GetForward() *50 + Vector(0,0,arc))  
+						end         
 					end)
 					ply:EmitSound("toss2.mp3", 70, 100, 1, CHAN_AUTO )
 			--ply:SetVelocity( ply:GetAimVector() * 1000 )  
@@ -1189,7 +1195,7 @@ function GM:PlayerCanJump(player)
     local canJump = true
 
     -- Debug: Print whether the player can jump
-    print("Player Can Jump:", canJump)
+   // print("Player Can Jump:", canJump)
 
     return canJump
 end
@@ -1228,11 +1234,11 @@ net.Receive ("receive_power" , function(bits , ply )
 	local allow_old_receive = net.ReadBool() 
 	local character = net.ReadString() 
 	
-	if character != "kuro" then 
+	if character ~= "kuro" and character ~= "kenma" then
 		character = ""
-	end 
+	end
 	
-	print("char "..character)
+	//print("char "..character)
 
 	entityBall:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR) 
 
@@ -1241,7 +1247,9 @@ net.Receive ("receive_power" , function(bits , ply )
 	elseif power == "strong" and character == "" then 
 		ReceivePosition(entityBall,entBallPos,ply,position,140,600,allow_receive_assist,allow_old_receive)
 	elseif power == "strong" and character == "kuro" then 
-		ReceivePosition(entityBall,entBallPos,ply,position,100,700,allow_receive_assist,allow_old_receive)
+		ReceivePosition(entityBall,entBallPos,ply,position,100,750,allow_receive_assist,allow_old_receive)
+	elseif power == "strong" and character == "kenma" then 
+		ReceivePosition(entityBall,entBallPos,ply,position,100,750,allow_receive_assist,allow_old_receive)
 	elseif power == "feint" then 
 		ReceivePosition(entityBall,entBallPos,ply,position,200,110,allow_receive_assist,allow_old_receive)
 	end 

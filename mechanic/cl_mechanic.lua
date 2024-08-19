@@ -1236,7 +1236,7 @@ function ReceivePower(setForce)
 						local ent =  ents.FindByClass( "prop_physics*" )
 						for k, v in pairs( ent ) do    
 							
-							if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 90*90 then
+							if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 80*80 then
 								
 
 								--print("detect ball")
@@ -1265,7 +1265,7 @@ function ReceivePower(setForce)
 						local ent =  ents.FindByClass( "prop_physics*" )
 						for k, v in pairs( ent ) do    
 							
-							if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 100*100 then
+							if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 80*80 then
 								release_ball = true
 								ReceiveSendToServer("feint",ent[k],false)
 								timer.Simple(1,function() release_ball = false end)
@@ -1327,7 +1327,7 @@ function ReceivePower(setForce)
 						local ent =  ents.FindByClass( "prop_physics*" )
 						for k, v in pairs( ent ) do    
 							
-							if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 100*100 then
+							if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 80*80 then
 								release_ball = true
 								ReceiveSendToServer("feint",ent[k],false)
 								timer.Simple(1,function() release_ball = false end)
@@ -1339,7 +1339,6 @@ function ReceivePower(setForce)
 		end 
 	end) 
 end 
-
 
 function TossPower(setForce)
 	ply = LocalPlayer() 

@@ -812,6 +812,7 @@ function kenma:DoClick()
 	ClearHooks()
 	MainFrame2:SetVisible(false) 
 	character = "kenma"
+	print("char:"..character)
 	SpikePower(20,600) 
 	ReceivePower(10)
 	TossPower(10)
@@ -1147,11 +1148,11 @@ kuro.Paint = function( self, w, h )
 		models:SetCamPos(headpos-Vector(-50, 0, 0))	-- Move cam in front of face
 		function models:LayoutEntity(ent) return end
 		character_skill:SetImage("materials/chart/tsukishima.png") 
-		character_name:SetText("LOCKED")
+		character_name:SetText("Tetsuro Kuro")
 		--character_skill:SetText("Stats\n\nJump: 4.6/5\nSpeed: 4/5\nSpike: 4.8/5\n\nAbility: Able to make a\ncut spike.")
-		skill_desc:SetText("A good receiver. \n\nDifficulty:")
-		skill_difficulty:SetText("EASY") 
-		skill_difficulty:SetTextColor(Color(88, 235, 2))
+		skill_desc:SetText("Able to move block around. \n\nDifficulty:")
+		skill_difficulty:SetText("MEDIUM") 
+		skill_difficulty:SetTextColor(Color(240, 136, 0))
 		draw.RoundedBox( 0, 0, 0, w, h, Color( 255,0,0,100) )      
 
 		kuro:SetTextColor(Color(0,0,0))

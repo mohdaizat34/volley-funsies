@@ -1466,7 +1466,7 @@ end
 
 default_block = false 
 blocking = false  
-
+local isBlocking = false
 
 hook.Add("PlayerButtonDown","Block",function(ply,button)	
 
@@ -1491,47 +1491,57 @@ hook.Add("PlayerButtonDown","Block",function(ply,button)
 			print("char:"..character)
 		
 			ply:ConCommand("pac_event block") 
-			if !ply:IsOnGround() then 
-				if ply:GetPos():WithinAABox( pos1, pos2 ) then 
+			if !ply:IsOnGround() and isBlocking == false then 
+				if ply:GetPos():WithinAABox( pos1, pos2 ) then
+					isBlocking = true 
 					net.Start("create_wall")
 					net.WriteString("left")
-					net.WriteString("block_left")
+					net.WriteString("default")
 					net.WriteString(character)
 					net.WriteBool(default_block)
 					net.SendToServer() 
+					timer.Simple(1,function() isBlocking = false end)
 				elseif ply:GetPos():WithinAABox( pos3, pos4 ) then 
+					isBlocking = true 
 					net.Start("create_wall")
 					net.WriteString("right")
-					net.WriteString("block_left")
+					net.WriteString("default")
 					net.WriteString(character)
 					net.WriteBool(default_block)
 					net.SendToServer() 
+					timer.Simple(1,function() isBlocking = false end)
 				end 
 			end 
 		end 
 	end 
-
-	-- if character == "kuro" then 
-	-- 	if button == KEY_R then  // when kuro lean left
-	-- 		if !ply:IsOnGround()  then
-	-- 			net.Start("create_wall")
-	-- 			net.WriteString("right")
-	-- 			net.WriteString("block_left")
-	-- 			net.WriteString("kuro")
-	-- 			net.WriteBool(default_block)
-	-- 			net.SendToServer() 
-	-- 		end 
-	-- 	elseif button == KEY_T then // when kuro lean right
-	-- 		if !ply:IsOnGround()  then
-	-- 			net.Start("create_wall")
-	-- 			net.WriteString("right")
-	-- 			net.WriteString("block_right")
-	-- 			net.WriteString("kuro")
-	-- 			net.WriteBool(default_block)
-	-- 			net.SendToServer() 
-	-- 		end 
-	-- 	end 
-	-- end 
+ 
+	if character == "kuro" then 
+		if button == KEY_R then  // when kuro lean left
+			if !ply:IsOnGround() and isBlocking == false then
+				isBlocking = true 
+				ply:ConCommand("pac_event blockleft")
+				net.Start("create_wall")
+				net.WriteString("left")
+				net.WriteString("block_left")
+				net.WriteString("kuro")
+				net.WriteBool(default_block)
+				net.SendToServer() 
+				timer.Simple(1,function() isBlocking = false end)
+			end 
+		elseif button == KEY_T then // when kuro lean right
+			if !ply:IsOnGround() and isBlocking == false then
+				isBlocking = true 
+				ply:ConCommand("pac_event blockright")
+				net.Start("create_wall")
+				net.WriteString("right")
+				net.WriteString("block_right")
+				net.WriteString("kuro")
+				net.WriteBool(default_block)
+				net.SendToServer() 
+				timer.Simple(1,function() isBlocking = false end)
+			end 
+		end 
+	end 
 end)
 
 function DivePower(setForce)

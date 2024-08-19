@@ -102,6 +102,7 @@ isSpiked = false
 local cooldown = false
 net.Receive("create_wall",function(bits,ply)
 	local blocker = ents.Create( "prop_dynamic" )
+	local blockerMedium = ents.Create( "prop_dynamic" )
 	local blockerTsuki = ents.Create( "prop_dynamic" )
 
 	local position = net.ReadString()  
@@ -111,6 +112,7 @@ net.Receive("create_wall",function(bits,ply)
 
 	print("char:"..character)
     blocker:SetModel( "models/props/court/blockpanel_s.mdl" )
+	blockerMedium:SetModel( "models/props/court/blockpanel_medium.mdl" ) 
 	blockerTsuki:SetModel( "models/props/court/blockpanel_m.mdl" )
     -- blocker2:SetModel( "models/props_debris/metal_panel01a.mdl" )
     -- tsukiBlock:SetModel( "models/props_debris/metal_panel01a.mdl" )
@@ -132,20 +134,38 @@ net.Receive("create_wall",function(bits,ply)
 	
 	-- Set collision group for the blockers
 	blocker:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
+	blockerMedium:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
 	blockerTsuki:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
 	
 ----------DEFAULT (Q) BLOCK ------------------------------------------------------------------------
 	local forward = ply:GetForward()
 	local blockerPosition = ply:GetPos() + forward * 50 -- Adjust the distance as needed
 	blockerPosition.z = blockerPosition.z + 100 -- Adjust the height as needed
-	local angle = forward:Angle()
-	angle.p = angle.p - 20 -- Tilt up by 15 degrees
-	angle.y = angle.y + 180 -- Rotate by 180 degrees along the Y-axis
+
+	
+	//KURO BLOCK -------------------------------------------------------------------------------
+	local right = ply:GetRight()  -- Get the right vector based on the player's angles
+
+	local distanceForward = 47  -- Adjust the distance forward as needed
+	local distanceRight = 80    -- Adjust the distance to the right or left as needed
+	local heightOffset = 95     -- Adjust the height as needed
+	
+	local blockerPositionKuroRight = ply:GetPos() + ply:GetForward() * distanceForward + right * distanceRight
+	blockerPositionKuroRight.z = blockerPositionKuroRight.z + 100 -- Adjust the height as needed
+
+	local blockerPositionKuroLeft = ply:GetPos() + ply:GetForward() * distanceForward - right * distanceRight
+	blockerPositionKuroLeft.z = blockerPositionKuroLeft.z + 100 -- Adjust the height as needed
 
 	local angleKuro = ply:GetAngles()
     angleKuro.p = angleKuro.p - 20 -- Set pitch (up/down tilt) to 45 degrees
     angleKuro.y = angleKuro.y + 180 
-    angleKuro.r = 45 -- Set roll (side tilt) to 45 degrees
+    angleKuro.r = 0 -- Set roll (side tilt) to 45 degrees
+
+	//-----------------------------------------------------------
+
+	local angle = forward:Angle()
+	angle.p = angle.p - 20 -- Tilt up by 15 degrees
+	angle.y = angle.y + 180 -- Rotate by 180 degrees along the Y-axis
 
 	--if default_block == true then 
 	if position == "left" then 
@@ -157,14 +177,33 @@ net.Receive("create_wall",function(bits,ply)
 			blockerTsuki:Spawn()
 			blockerTsuki:SetNoDraw(false)
 			cooldown = true 
-		elseif character == "kuro" then 
-			blocker:SetMaterial("models/wireframe")
-			blocker:SetAngles(angle)
-			blocker:SetParent(ply, headBone) -- Parent to the player's head bone
-			blocker:SetLocalPos(Vector(10, 0, 110)) -- Adjust position relative to the head bone
-			blocker:Spawn()
-			blocker:SetNoDraw(false)
+		elseif character == "kuro" then
+			if tsuki_direction == "block_right" then 
+				angleKuro.r = -35 -- Set roll (side tilt) to 45 degrees
+				blockerMedium:SetMaterial( "models/wireframe" )
+				blockerMedium:SetPos(blockerPositionKuroRight)
+				blockerMedium:SetAngles(angleKuro) -- Set the angles based on the player's forward vector
+				blockerMedium:SetSolid(SOLID_VPHYSICS)
+				blockerMedium:Spawn()
+				blockerMedium:SetNoDraw(false)
+				cooldown = true 
+			elseif tsuki_direction == "block_left" then  
+				blockerMedium:SetMaterial( "models/wireframe" )
+				blockerMedium:SetPos(blockerPositionKuroLeft)
+				blockerMedium:SetAngles(angleKuro) -- Set the angles based on the player's forward vector
+				blockerMedium:SetSolid(SOLID_VPHYSICS)
+				blockerMedium:Spawn()
+				blockerMedium:SetNoDraw(false)
+				cooldown = true 
+			else 
+				blocker:SetMaterial( "models/wireframe" )
+				blocker:SetPos(blockerPosition)
+				blocker:SetAngles(angle) -- Set the angles based on the player's forward vector
+				blocker:SetSolid(SOLID_VPHYSICS)
+				blocker:Spawn()
+				blocker:SetNoDraw(false)
 			cooldown = true 
+			end 
 		else 
 			blocker:SetMaterial( "models/wireframe" )
 			blocker:SetPos(blockerPosition)
@@ -184,13 +223,31 @@ net.Receive("create_wall",function(bits,ply)
 			blockerTsuki:SetNoDraw(false)
 			cooldown = true 
 		elseif character == "kuro" then 
-			blocker:SetMaterial("models/wireframe") 
-			blocker:SetAngles(angle)
-			blocker:SetParent(ply, headBone) -- Parent to the player's head bone
-			blocker:SetLocalPos(Vector(10, 0, 110)) -- Adjust position relative to the head bone
-			blocker:Spawn()
-			blocker:SetNoDraw(false)
-			cooldown = true 
+			if tsuki_direction == "block_right" then 
+				blockerMedium:SetMaterial( "models/wireframe" )
+				blockerMedium:SetPos(blockerPositionKuroRight)
+				blockerMedium:SetAngles(angleKuro) -- Set the angles based on the player's forward vector
+				blockerMedium:SetSolid(SOLID_VPHYSICS)
+				blockerMedium:Spawn()
+				blockerMedium:SetNoDraw(false)
+				cooldown = true 
+			elseif tsuki_direction == "block_left" then  
+				blockerMedium:SetMaterial( "models/wireframe" )
+				blockerMedium:SetPos(blockerPositionKuroLeft)
+				blockerMedium:SetAngles(angleKuro) -- Set the angles based on the player's forward vector
+				blockerMedium:SetSolid(SOLID_VPHYSICS)
+				blockerMedium:Spawn()
+				blockerMedium:SetNoDraw(false)
+				cooldown = true 
+			else 
+				blocker:SetMaterial( "models/wireframe" )
+				blocker:SetPos(blockerPosition)
+				blocker:SetAngles(angle) -- Set the angles based on the player's forward vector
+				blocker:SetSolid(SOLID_VPHYSICS)
+				blocker:Spawn()
+				blocker:SetNoDraw(false)
+				cooldown = true 
+			end 
 		else 
 			blocker:SetMaterial( "models/wireframe" )
 			blocker:SetPos(blockerPosition)
@@ -201,7 +258,7 @@ net.Receive("create_wall",function(bits,ply)
 			cooldown = true 
 		end 
 	end 
-	timer.Simple( 1.2, function() cooldown = false  blockerTsuki:Remove() blocker:Remove() end )
+	timer.Simple( 1.2, function() cooldown = false  blockerTsuki:Remove() blocker:Remove() blockerMedium:Remove() end )
 
 end)
 
@@ -333,7 +390,7 @@ function SpikePosition(v,ply,position,power,arc,entityPosVect,allow_spike_assist
 						SafeRemoveEntity( trail )	
 						trail = util.SpriteTrail( v, 0, Color( 217, 72, 214,300 ), false, 15, 1, 0.3, 1 / ( 15 + 1 ) * 0.5, "trails/physbeam" )
 					print( trail )
-				elseif power == 1100 then //hinata
+				elseif power == 1150 then //hinata
 					local hinataSound = table.Random(randomSoundHinata)
 					ply:EmitSound(hinataSound, 70, 100, 1, CHAN_AUTO ) 
 					SafeRemoveEntity( trail )	
@@ -343,11 +400,16 @@ function SpikePosition(v,ply,position,power,arc,entityPosVect,allow_spike_assist
 					ply:EmitSound(bokutoSound, 70, 100, 1, CHAN_AUTO ) 
 					SafeRemoveEntity( trail )	
 					trail = util.SpriteTrail( v, 0, Color(161, 161, 161,300 ), false, 15, 1, 0.3, 1 / ( 15 + 1 ) * 0.5, "trails/physbeam" )
-				elseif power == 1101 then //korai
+				elseif power == 1300 then //korai
 					local koraiSound = table.Random(randomSoundKorai)
 					ply:EmitSound(koraiSound, 70, 100, 1, CHAN_AUTO ) 
 					SafeRemoveEntity( trail )	
 					trail = util.SpriteTrail( v, 0, Color(161, 161, 161,300 ), false, 15, 1, 0.3, 1 / ( 15 + 1 ) * 0.5, "trails/physbeam" )
+				elseif power == 1200 then //kuro 
+					-- local koraiSound = table.Random(randomSoundKorai)
+					-- ply:EmitSound(koraiSound, 70, 100, 1, CHAN_AUTO ) 
+					SafeRemoveEntity( trail )	
+					trail = util.SpriteTrail( v, 0, Color(255, 65, 65), false, 15, 1, 0.3, 1 / ( 15 + 1 ) * 0.5, "trails/physbeam" )
 				end
 			end
 		end 
@@ -415,7 +477,7 @@ function SpikePosition(v,ply,position,power,arc,entityPosVect,allow_spike_assist
 						SafeRemoveEntity( trail )	
 						trail = util.SpriteTrail( v, 0, Color( 217, 72, 214,300 ), false, 15, 1, 0.3, 1 / ( 15 + 1 ) * 0.5, "trails/physbeam" )
 					print( trail )
-				elseif power == 1100 then //hinata
+				elseif power == 1150 then //hinata
 					local hinataSound = table.Random(randomSoundHinata)
 					ply:EmitSound(hinataSound, 70, 100, 1, CHAN_AUTO ) 
 					SafeRemoveEntity( trail )	
@@ -425,11 +487,16 @@ function SpikePosition(v,ply,position,power,arc,entityPosVect,allow_spike_assist
 					ply:EmitSound(bokutoSound, 70, 100, 1, CHAN_AUTO ) 
 					SafeRemoveEntity( trail )	
 					trail = util.SpriteTrail( v, 0, Color(161, 161, 161,300 ), false, 15, 1, 0.3, 1 / ( 15 + 1 ) * 0.5, "trails/physbeam" )
-				elseif power == 1101 then //korai
+				elseif power == 1300 then //korai
 					local koraiSound = table.Random(randomSoundKorai)
 					ply:EmitSound(koraiSound, 70, 100, 1, CHAN_AUTO ) 
 					SafeRemoveEntity( trail )	
 					trail = util.SpriteTrail( v, 0, Color(161, 161, 161,300 ), false, 15, 1, 0.3, 1 / ( 15 + 1 ) * 0.5, "trails/physbeam" )
+				elseif power == 1200 then //kuro 
+					-- local koraiSound = table.Random(randomSoundKorai)
+					-- ply:EmitSound(koraiSound, 70, 100, 1, CHAN_AUTO ) 
+					SafeRemoveEntity( trail )	
+					trail = util.SpriteTrail( v, 0, Color(255, 65, 65), false, 15, 1, 0.3, 1 / ( 15 + 1 ) * 0.5, "trails/physbeam" )
 				end
 			end
 		end 
@@ -489,10 +556,11 @@ end
 end 
 
 function ReceivePosition(v,vPos,ply,position,power,arc,allow_receive_assist,allow_old_receive) 
-	-- game.SetTimeScale( 0.5 )
-	-- timer.Simple(1, function() 
-	-- 	game.SetTimeScale(1)
-	-- end)
+
+	//reposition the ball
+	local offsetInFront = ply:GetForward() * 50
+	local newPosition = ply:GetPos() + offsetInFront
+    newPosition.z = ply:GetPos().z + 50
 
 	if allow_old_receive == false then 
 		if position == "left" then 
@@ -520,7 +588,7 @@ function ReceivePosition(v,vPos,ply,position,power,arc,allow_receive_assist,allo
 						v:GetPhysicsObject():SetVelocity(ply:GetForward() * power + Vector(0,0,arc))    -- standard 470 arc   110 power 
 							
 						if allow_receive_assist == true then 
-							v:SetPos(ply:GetPos() + Vector(0, 0, 50)) -- Adjust the Z coordinate as needed
+							v:SetPos(newPosition) -- Adjust the Z coordinate as needed
 						end 
 					end 
 				end 
@@ -550,7 +618,7 @@ function ReceivePosition(v,vPos,ply,position,power,arc,allow_receive_assist,allo
 						ply:EmitSound("receive.mp3", 70, 100, 1, CHAN_AUTO )
 						v:GetPhysicsObject():SetVelocity(ply:GetForward() * power + Vector(0,0,arc))    -- standard 470 arc   110 power 	
 						if allow_receive_assist == true then 
-							v:SetPos(ply:GetPos() + Vector(0, 0, 50)) -- Adjust the Z coordinate as needed
+							v:SetPos(newPosition) -- Adjust the Z coordinate as needed
 						end 
 					end 
 				end 

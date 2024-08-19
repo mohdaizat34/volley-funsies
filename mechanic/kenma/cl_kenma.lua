@@ -128,6 +128,7 @@ function KenmaSendToServer(direction,power)
 	else 
 		position = "right"
 	end 
+	
 	net.Start("kenma_dump")
 	net.WriteString(position)
 	net.WriteString(direction)

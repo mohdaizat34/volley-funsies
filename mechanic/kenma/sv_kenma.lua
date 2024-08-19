@@ -30,13 +30,13 @@ net.Receive ("kenma_dump" , function(bits , ply )
 							if power == "soft" then 
 								
 								v:SetPos(ply:GetPos() + Vector(0, 0, 115)) -- Adjust the Z coordinate as needed
-								v:GetPhysicsObject():SetVelocity( Vector(-120,-300,-140))
+								v:GetPhysicsObject():SetVelocity( Vector(-300,-300,-500))
 							end
 						else 
 							if power == "soft" then 
 				
 								v:SetPos(ply:GetPos() + Vector(0, 0, 115)) -- Adjust the Z coordinate as needed
-								v:GetPhysicsObject():SetVelocity( Vector(120,-300,-140))
+								v:GetPhysicsObject():SetVelocity( Vector(300,-300,-500))
 							end
 						end 
 						--[[timer.Create("serveking",0.1,1,function()      
@@ -53,14 +53,14 @@ net.Receive ("kenma_dump" , function(bits , ply )
 					
 							if power == "soft" then 
 								v:SetPos(ply:GetPos() + Vector(0, 0, 115)) -- Adjust the Z coordinate as needed
-								v:GetPhysicsObject(): SetVelocity(Vector(120,300,-140))
+								v:GetPhysicsObject(): SetVelocity(Vector(300,300,-500))
 								--v:GetPhysicsObject():SetVelocity(ply:GetForward()* 100  + Vector(0,300,-140))
 							end 
 						else 
 							
 							if power == "soft" then
 								v:SetPos(ply:GetPos() + Vector(0, 0, 115)) -- Adjust the Z coordinate as needed
-								v:GetPhysicsObject():SetVelocity( Vector(-120,300,-140))
+								v:GetPhysicsObject():SetVelocity( Vector(-300,300,-500))
 								--v:GetPhysicsObject():SetVelocity(ply:GetForward() * -100  + Vector(0,300,-140))
 						
 							end 

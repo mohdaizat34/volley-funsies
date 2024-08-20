@@ -734,16 +734,19 @@ function KageFrontToss(setForce)
 
 end 
 
-function CutSendToServer(direction,power)  
+function CutSendToServer(direction,power,entBall)  
 	if ply:GetPos():WithinAABox( pos1, pos2 ) then
 		position = "left"
 	else 
 		position = "right"
 	end 
+	print(entBall:GetPos())
 	net.Start("bokuto_cut")
 	net.WriteString(position)
 	net.WriteString(direction)
 	net.WriteString(power)
+	net.WriteEntity(entBall)
+	net.WriteVector(entBall:GetPos())
 	net.SendToServer()
 end
 
@@ -950,6 +953,26 @@ function MiyaServe()
 end 
 
 
+
+
+-- if release_ball_spike == false then 
+-- 	if (input.IsButtonDown(MOUSE_LEFT)) then
+-- 		release_ball_spike = false
+-- 		action_status = "SPIKING"
+-- 		-- detect ball when hold button
+-- 		local ent =  ents.FindByClass( "prop_physics*" )
+-- 		for k, v in pairs( ent ) do    
+-- 			physObj = ent[k]:GetPhysicsObject()
+
+			
+-- 			if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 115*115 then
+-- 				ply:ConCommand("pac_event spike") 
+-- 				surface.PlaySound("spike.mp3")
+				
+-- 				release_ball_spike = true
+-- 				if set_power_level_spike == power_level_spike[1] then
+-- 					SpikeSendToServer("weak",spikepower,ent[k],ent[k]:GetPos(),allow_spike_assist)
+
 function BokutoSpike(setForce)
 	ply = LocalPlayer() 
 	pb_left = 0  
@@ -963,7 +986,7 @@ function BokutoSpike(setForce)
 
 	
 	hook.Add( "Tick", "keydownboku", function()
-
+		local ent =  ents.FindByClass( "prop_physics*" )
 		local keySettingR,keySettingT 
 
 		if allow_left_assist == false then
@@ -979,7 +1002,7 @@ function BokutoSpike(setForce)
 			leftbuttonpress = 1 
 			MainFrame2:SetVisible(true)
 			leftpower = leftpower + 1 
-			pb_left = pb_left + 0.04 
+			pb_left = pb_left + 0.05 
 			DProgress:SetFraction( pb_left )
 
 		else 
@@ -988,17 +1011,26 @@ function BokutoSpike(setForce)
 			elseif leftbuttonpress == 1 then 
 				leftbuttonpress = 0 
 				MainFrame2:SetVisible(false)
-				if leftpower < setForce then 
-					CutSendToServer("left","soft")
-					leftpower = 0
-					pb_left = 0 
-					DProgress:SetFraction( pb_left )  
+				for k, v in pairs( ent ) do   
+					if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 120*120 then
+	
+						if leftpower < setForce then 
+			
+							LocalPlayer():ConCommand("pac_event spike") 
+							CutSendToServer("left","soft",ent[k])
+							leftpower = 0
+							pb_left = 0 
+							DProgress:SetFraction( pb_left )  
 
-				else 
-					CutSendToServer("left","power")
-					leftpower = 0  
-					pb_left = 0 
-					DProgress:SetFraction( pb_left ) 
+						else 
+
+							LocalPlayer():ConCommand("pac_event spike") 
+							CutSendToServer("left","power",ent[k])
+							leftpower = 0  
+							pb_left = 0 
+							DProgress:SetFraction( pb_left ) 
+						end 
+					end 
 				end  
 				leftpower = 0
 				pb_left = 0 
@@ -1020,21 +1052,27 @@ function BokutoSpike(setForce)
 			elseif rightbuttonpress == 1 then 
 				rightbuttonpress = 0 
 				MainFrame2:SetVisible(false)
-				if rightpower < setForce then 
-					CutSendToServer("right","soft")
-					rightpower = 0
-					pb_right = 0 
-					DProgress:SetFraction( pb_right )  
+				for k, v in pairs( ent ) do   
+					if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 115*115 then
+	
+						if rightpower < setForce then 
+			
+							LocalPlayer():ConCommand("pac_event spike") 
+							CutSendToServer("right","soft",ent[k])
+							rightpower = 0
+							pb_right = 0 
+							DProgress:SetFraction( pb_right )  
 
-				else 
-					CutSendToServer("right","power")
-					rightpower = 0  
-					pb_right = 0 
-					DProgress:SetFraction( pb_right ) 
+						else 
+							
+							LocalPlayer():ConCommand("pac_event spike") 
+							CutSendToServer("right","power",ent[k])
+							rightpower = 0  
+							pb_right = 0 
+							DProgress:SetFraction( pb_right ) 
+						end 
+					end 
 				end  
-				rightpower = 0
-				pb_right = 0 
-				DProgress:SetFraction( pb_right )  
 			end 
 		end  
 	end) 

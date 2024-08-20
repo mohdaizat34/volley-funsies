@@ -104,6 +104,7 @@ net.Receive("create_wall",function(bits,ply)
 	local blocker = ents.Create( "prop_dynamic" )
 	local blockerMedium = ents.Create( "prop_dynamic" )
 	local blockerTsuki = ents.Create( "prop_dynamic" )
+	local blockerKuro = ents.Create( "prop_dynamic" )
 
 	local position = net.ReadString()  
 	local tsuki_direction = net.ReadString() 
@@ -114,6 +115,7 @@ net.Receive("create_wall",function(bits,ply)
     blocker:SetModel( "models/props/court/blockpanel_s.mdl" )
 	blockerMedium:SetModel( "models/props/court/blockpanel_medium.mdl" ) 
 	blockerTsuki:SetModel( "models/props/court/blockpanel_m.mdl" )
+	blockerKuro:SetModel( "models/props/court/blockpanel_medium.mdl" )
     -- blocker2:SetModel( "models/props_debris/metal_panel01a.mdl" )
     -- tsukiBlock:SetModel( "models/props_debris/metal_panel01a.mdl" )
 
@@ -136,6 +138,7 @@ net.Receive("create_wall",function(bits,ply)
 	blocker:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
 	blockerMedium:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
 	blockerTsuki:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
+	blockerKuro:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
 	
 ----------DEFAULT (Q) BLOCK ------------------------------------------------------------------------
 	local forward = ply:GetForward()
@@ -143,11 +146,12 @@ net.Receive("create_wall",function(bits,ply)
 	blockerPosition.z = blockerPosition.z + 100 -- Adjust the height as needed
 
 	
+	
 	//KURO BLOCK -------------------------------------------------------------------------------
 	local right = ply:GetRight()  -- Get the right vector based on the player's angles
 
-	local distanceForward = 47  -- Adjust the distance forward as needed
-	local distanceRight = 80    -- Adjust the distance to the right or left as needed
+	local distanceForward = 50  -- Adjust the distance forward as needed
+	local distanceRight = 55    -- Adjust the distance to the right or left as needed
 	local heightOffset = 95     -- Adjust the height as needed
 	
 	local blockerPositionKuroRight = ply:GetPos() + ply:GetForward() * distanceForward + right * distanceRight
@@ -157,14 +161,14 @@ net.Receive("create_wall",function(bits,ply)
 	blockerPositionKuroLeft.z = blockerPositionKuroLeft.z + 100 -- Adjust the height as needed
 
 	local angleKuro = ply:GetAngles()
-    angleKuro.p = angleKuro.p - 20 -- Set pitch (up/down tilt) to 45 degrees
+    angleKuro.p = angleKuro.p - 15 -- Set pitch (up/down tilt) to 45 degrees
     angleKuro.y = angleKuro.y + 180 
-    angleKuro.r = 0 -- Set roll (side tilt) to 45 degrees
+    angleKuro.r = 5-- Set roll (side tilt) to 45 degrees
 
 	//-----------------------------------------------------------
 
 	local angle = forward:Angle()
-	angle.p = angle.p - 20 -- Tilt up by 15 degrees
+	angle.p = angle.p - 15 -- Tilt up by 15 degrees
 	angle.y = angle.y + 180 -- Rotate by 180 degrees along the Y-axis
 
 	--if default_block == true then 
@@ -179,21 +183,22 @@ net.Receive("create_wall",function(bits,ply)
 			cooldown = true 
 		elseif character == "kuro" then
 			if tsuki_direction == "block_right" then 
-				angleKuro.r = -35 -- Set roll (side tilt) to 45 degrees
-				blockerMedium:SetMaterial( "models/wireframe" )
-				blockerMedium:SetPos(blockerPositionKuroRight)
-				blockerMedium:SetAngles(angleKuro) -- Set the angles based on the player's forward vector
-				blockerMedium:SetSolid(SOLID_VPHYSICS)
-				blockerMedium:Spawn()
-				blockerMedium:SetNoDraw(false)
+				angleKuro.r = -5 -- Set roll (side tilt) to 45 degrees
+				blocker:SetMaterial( "models/wireframe" )
+				blocker:SetPos(blockerPositionKuroRight)
+				blocker:SetAngles(angleKuro) -- Set the angles based on the player's forward vector
+				blocker:SetSolid(SOLID_VPHYSICS)
+				blocker:Spawn()
+				blocker:SetNoDraw(false)
 				cooldown = true 
 			elseif tsuki_direction == "block_left" then  
-				blockerMedium:SetMaterial( "models/wireframe" )
-				blockerMedium:SetPos(blockerPositionKuroLeft)
-				blockerMedium:SetAngles(angleKuro) -- Set the angles based on the player's forward vector
-				blockerMedium:SetSolid(SOLID_VPHYSICS)
-				blockerMedium:Spawn()
-				blockerMedium:SetNoDraw(false)
+				angleKuro.r = 5
+				blockerKuro:SetMaterial( "models/wireframe" )
+				blockerKuro:SetPos(blockerPositionKuroLeft)
+				blockerKuro:SetAngles(angleKuro) -- Set the angles based on the player's forward vector
+				blockerKuro:SetSolid(SOLID_VPHYSICS)
+				blockerKuro:Spawn()
+				blockerKuro:SetNoDraw(false)
 				cooldown = true 
 			else 
 				blocker:SetMaterial( "models/wireframe" )
@@ -224,20 +229,22 @@ net.Receive("create_wall",function(bits,ply)
 			cooldown = true 
 		elseif character == "kuro" then 
 			if tsuki_direction == "block_right" then 
-				blockerMedium:SetMaterial( "models/wireframe" )
-				blockerMedium:SetPos(blockerPositionKuroRight)
-				blockerMedium:SetAngles(angleKuro) -- Set the angles based on the player's forward vector
-				blockerMedium:SetSolid(SOLID_VPHYSICS)
-				blockerMedium:Spawn()
-				blockerMedium:SetNoDraw(false)
+				angleKuro.r = -5
+				blockerKuro:SetMaterial( "models/wireframe" )
+				blockerKuro:SetPos(blockerPositionKuroRight)
+				blockerKuro:SetAngles(angleKuro) -- Set the angles based on the player's forward vector
+				blockerKuro:SetSolid(SOLID_VPHYSICS)
+				blockerKuro:Spawn()
+				blockerKuro:SetNoDraw(false)
 				cooldown = true 
-			elseif tsuki_direction == "block_left" then  
-				blockerMedium:SetMaterial( "models/wireframe" )
-				blockerMedium:SetPos(blockerPositionKuroLeft)
-				blockerMedium:SetAngles(angleKuro) -- Set the angles based on the player's forward vector
-				blockerMedium:SetSolid(SOLID_VPHYSICS)
-				blockerMedium:Spawn()
-				blockerMedium:SetNoDraw(false)
+			elseif tsuki_direction == "block_left" then 
+				angleKuro.r = 5 
+				blockerKuro:SetMaterial( "models/wireframe" )
+				blockerKuro:SetPos(blockerPositionKuroLeft)
+				blockerKuro:SetAngles(angleKuro) -- Set the angles based on the player's forward vector
+				blockerKuro:SetSolid(SOLID_VPHYSICS)
+				blockerKuro:Spawn()
+				blockerKuro:SetNoDraw(false)
 				cooldown = true 
 			else 
 				blocker:SetMaterial( "models/wireframe" )
@@ -258,7 +265,7 @@ net.Receive("create_wall",function(bits,ply)
 			cooldown = true 
 		end 
 	end 
-	timer.Simple( 1.2, function() cooldown = false  blockerTsuki:Remove() blocker:Remove() blockerMedium:Remove() end )
+	timer.Simple( 1.2, function() cooldown = false  blockerTsuki:Remove() blockerKuro:Remove()  blocker:Remove() blockerMedium:Remove() end )
 
 end)
 
@@ -1141,77 +1148,78 @@ net.Receive ("bokuto_cut" , function(bits , ply )
 	local position = net.ReadString()
 	local direction = net.ReadString() 
 	local power = net.ReadString() 
+	local v = net.ReadEntity() 
+	local entityPosVect = net.ReadVector() 
 
 	local ent =  ents.FindByClass( "prop_physics*" )
 
-	for k, v in pairs( ent ) do   
-		if ply:GetPos():DistToSqr( v:GetPos() ) < 118*118 then     
-			ply:EmitSound("spike.mp3", 70, 100, 1, CHAN_AUTO ) 
-			--if(v:GetName() =='volleyball1' or v:GetName() == 'volleyball2' or v:GetName() == 'volleyball3') then 
 
-				v:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR)
 
-				timer.Create("collide",2,1,function() 
-					v:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR)
-				end)
+		ply:EmitSound("spike.mp3", 70, 100, 1, CHAN_AUTO ) 
+		--if(v:GetName() =='volleyball1' or v:GetName() == 'volleyball2' or v:GetName() == 'volleyball3') then 
 
-				if position == "left" then  
-					if v:GetPos():WithinAABox( pos3, pos4 ) then
-						ply:ChatPrint("Can't spike ball over other team area!") 
-					else  
-						ball_status = "spike"
-						if direction == "right" then 
-							 
-							if power == "soft" then 
-							
-								v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 700  + Vector(-900,0,0))
-							else 
-								ply:EmitSound("boku/spike2.mp3", 70, 100, 1, CHAN_AUTO )
-								v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 1000  + Vector(-1500,0,-200)) 
-							end 
-						else 
-							ball_status = "spike"
-							if power == "soft" then 
-				
-								
-								v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 700  + Vector(900,0,0))
-							else 
-								ply:EmitSound("boku/spike2.mp3", 70, 100, 1, CHAN_AUTO )  
-								v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 1500  + Vector(1500,0,-200))
-							end 
-						end   
-					end 
-				else  
-					if v:GetPos():WithinAABox( pos1, pos2 ) then
-						ply:ChatPrint("Can't spike ball over other team area!")
+		v:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR)
 
+		timer.Create("collide",2,1,function() 
+			v:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR)
+		end)
+
+		if position == "left" then  
+			if v:GetPos():WithinAABox( pos3, pos4 ) then
+				ply:ChatPrint("Can't spike ball over other team area!") 
+			else  
+				ball_status = "spike"
+				if direction == "right" then 
+						
+					if power == "soft" then 
+						v:SetPos(entityPosVect)
+						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 700  + Vector(-900,0,0))
 					else 
-						if direction == "left" then 
+						ply:EmitSound("boku/spike2.mp3", 70, 100, 1, CHAN_AUTO )
+						v:SetPos(entityPosVect)
+						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 1000  + Vector(-1500,0,-200)) 
+					end 
+				else 
+					ball_status = "spike"
+					if power == "soft" then 
+		
+						
+						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 700  + Vector(900,0,0))
+					else 
+						ply:EmitSound("boku/spike2.mp3", 70, 100, 1, CHAN_AUTO )  
+						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 1500  + Vector(1500,0,-200))
+					end 
+				end   
+			end 
+		else  
+			if v:GetPos():WithinAABox( pos1, pos2 ) then
+				ply:ChatPrint("Can't spike ball over other team area!")
+
+			else 
+				if direction == "left" then 
+			
+					if power == "soft" then 
+						
+						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 700  + Vector(-900,0,0))
+					else 
+				
+						ply:EmitSound("boku/spike2.mp3", 70, 100, 1, CHAN_AUTO ) 
+						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 1500  + Vector(-1500,0,-200))
+					end 
+				else 
 					
-							if power == "soft" then 
-								
-								v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 700  + Vector(-900,0,0))
-							else 
-						
-								ply:EmitSound("boku/spike2.mp3", 70, 100, 1, CHAN_AUTO ) 
-								v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 1500  + Vector(-1500,0,-200))
-							end 
-						else 
-							
-							if power == "soft" then
-						
-						
-								v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 700  + Vector(900,0,0))
-							else 
-								ply:EmitSound("boku/spike2.mp3", 70, 100, 1, CHAN_AUTO )  
-								v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 1500  + Vector(1500,0,-200))
-							end 
-						end 
+					if power == "soft" then
+				
+				
+						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 700  + Vector(900,0,0))
+					else 
+						ply:EmitSound("boku/spike2.mp3", 70, 100, 1, CHAN_AUTO )  
+						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 1500  + Vector(1500,0,-200))
 					end 
 				end 
-			--end
-		end
-	end  
+			end 
+		end 
+
 end) 
 
 -- yamaguchi 

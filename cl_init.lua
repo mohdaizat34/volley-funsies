@@ -1168,7 +1168,7 @@ function kuro:DoClick()
 	character = "kuro"
 	print("char:"..character)
 	ClearHooks()
-	SpikePower(10,1200) 
+	SpikePower(10,1000) 
 	ReceivePower(10)
 	SpikerSignal()
 	--BlockPower(10)

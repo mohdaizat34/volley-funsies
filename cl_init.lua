@@ -1,5 +1,6 @@
 include("mechanic/cl_mechanic.lua") 
 include("mechanic/kenma/cl_kenma.lua")
+include("mechanic/sakusa/cl_sakusa.lua")
 include("mechanic/hinata/cl_hinata.lua")
 include("mechanic/cl_communication.lua") 
 include("mechanic/cl_setting.lua")
@@ -8,7 +9,7 @@ include("info/cl_animinfo.lua")
 include("info/cl_hud.lua")
 include("font.lua")
 include("info/cl_tutorial.lua")
-
+include("cl_ui.lua")
 
 position = "" 
 
@@ -112,7 +113,7 @@ function StartButton:DoClick()
 	--end) 
 	FirstFrame:Close()
 
-	MenuFrame() 
+	//MenuFrame() 
 end 
 
 function MenuFrame() 
@@ -1177,6 +1178,56 @@ function kuro:DoClick()
 
 	net.Start("character_select")
 	net.WriteString("kuro")
+	net.SendToServer() 
+	sound3:Stop()	
+end
+
+local sakusa = vgui.Create( "DImageButton", LeftPanel )       
+sakusa:Dock(TOP) 
+sakusa:SetSize(150,150)    
+sakusa:SetTextColor(Color(255,255,255))                  
+sakusa:DockMargin( 0, 10 , 0, 0 )     
+sakusa:SetFont("tiny2")  
+sakusa:SetImage("materials/character/kuro.jpg") 
+sakusa.Paint = function( self, w, h )      
+	if sakusa:IsHovered() then 
+		spider_panel:SetVisible(true)
+		models:SetModel("models/haikyuu/male/kuroo.mdl")
+		local headpos = models.Entity:GetBonePosition(models.Entity:LookupBone("ValveBiped.Bip01_Head1"))
+		models:SetLookAt(headpos)
+		models:SetCamPos(headpos-Vector(-50, 0, 0))	-- Move cam in front of face
+		function models:LayoutEntity(ent) return end
+		character_skill:SetImage("materials/chart/tsukishima.png") 
+		character_name:SetText("Tetsuro Kuro")
+		--character_skill:SetText("Stats\n\nJump: 4.6/5\nSpeed: 4/5\nSpike: 4.8/5\n\nAbility: Able to make a\ncut spike.")
+		skill_desc:SetText("Able to move block around. \n\nDifficulty:")
+		skill_difficulty:SetText("MEDIUM") 
+		skill_difficulty:SetTextColor(Color(240, 136, 0))
+		draw.RoundedBox( 0, 0, 0, w, h, Color( 255,0,0,100) )      
+
+		sakusa:SetTextColor(Color(0,0,0))
+	else 
+		draw.RoundedBox( 0, 0, 0, w, h, Color( 0,0,0,0) ) 
+		sakusa:SetTextColor(Color(255,255,255)) 
+	end    
+end
+
+function sakusa:DoClick()
+	hook.Remove("PlayerButtonDown","Ref",function(ply,button) end)
+	chat.AddText(Color(255,0,0),"Press M to change char\nF2 for Thirdperson\nF1 for Character Tips")  
+	character = "sakusa"
+	print("char:"..character)
+	ClearHooks()
+	SpikePower(10,1201) 
+	ReceivePower(10)
+	SpikerSignal()
+	SakusaAttack(1000) 
+	--BlockPower(10)
+	BasicServe()
+	MainFrame2:SetVisible(false) 
+
+	net.Start("character_select")
+	net.WriteString("sakusa")
 	net.SendToServer() 
 	sound3:Stop()	
 end

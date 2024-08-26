@@ -163,7 +163,7 @@ function SpikePower(setForce,spikepower)
 									-- Trace a line downward to check for ground collision
 									local traceBall = util.TraceLine({
 										start = posBall,
-										endpos = posBall - Vector(0, 0, 23), -- Adjust the length based on your needs
+										endpos = posBall - Vector(0, 0, 20), -- Adjust the length based on your needs
 										mask = MASK_OPAQUE
 									})
 									
@@ -228,7 +228,7 @@ function SpikePower(setForce,spikepower)
 									-- Trace a line downward to check for ground collision
 									local traceBall = util.TraceLine({
 										start = posBall,
-										endpos = posBall - Vector(0, 0, 23), -- Adjust the length based on your needs
+										endpos = posBall - Vector(0, 0, 20), -- Adjust the length based on your needs
 										mask = MASK_OPAQUE
 									})
 									

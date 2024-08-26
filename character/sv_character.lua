@@ -135,6 +135,13 @@ net.Receive ("character_select" , function(bits , ply )
 		ply:ConCommand("playermodel_apply")
 		print(ply:GetModel())
 
+	elseif character == "sakusa" then 
+		CharStats(ply,280,300+jumpAdd)
+		ply:SetModel("models/player/summermilitary/male_02.mdl") 
+		ply:ConCommand("cl_playermodel Kiyoomi Sakusa")
+		ply:ConCommand("playermodel_apply")
+		print(ply:GetModel())
+
 	elseif character == "ref" then 
 		CharStats(ply,340,380)
 		ply:SetWalkSpeed(300)

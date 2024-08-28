@@ -1288,7 +1288,6 @@ end
 
 -- reminder 
 timer.Create("reminder",600,0,function() 
-	chat.AddText(Color(206, 119, 252),"Have you equip animation yet? Rejoin and follow the steps!")
 	chat.AddText(Color(206, 119, 252),"Have you joined our Discord server yet?")
 end)
 
@@ -1391,6 +1390,8 @@ end)
 
 
 function ClearHooks() 
+	hook.Remove( "Tick", "Bokuto_Cut", function() end)
+	hook.Remove( "Tick", "KeyDown_Sakusa_Spike", function() end) 
 	hook.Remove("PlayerButtonDown","referererere",function(ply,button) end) 
 	hook.Remove( "Tick", "KeyDown_Testis", function() end)
 	hook.Remove( "Tick", "KeyDown_Tests", function() end) 

@@ -132,8 +132,9 @@ function CreateCharacterSelectMenu()
 
     function greenTeamButton:DoClick() 
         frame:Close()
+        LocalPlayer():ConCommand("stopsound")
         net.Start("changeteam")
-        net.WriteString("green") //red
+        net.WriteString("red") //red
         net.WriteString(character)
         net.SendToServer() 
     end 
@@ -152,6 +153,7 @@ function CreateCharacterSelectMenu()
 
     function blueTeamButton:DoClick() 
         frame:Close()
+        LocalPlayer():ConCommand("stopsound")
         net.Start("changeteam")
         net.WriteString("blue") //blue
         net.SendToServer() 
@@ -334,14 +336,14 @@ local characterStats = {
     ["Hinata Shoyo"] = {Speed = 100, Power = 70, Jump = 90},
     ["Kageyama Tobio"] = {Speed = 75, Power = 60, Jump = 70},
     ["Sakusa Kiyoomi"] = {Speed = 70, Power = 70, Jump = 80},
-    ["Kotaro Bokuto"] = {Speed = 70, Power = 90, Jump = 80},
+    ["Kotaro Bokuto"] = {Speed = 70, Power = 85, Jump = 80},
     ["Tetsuro Kuro"] = {Speed = 70, Power = 70, Jump = 80},
     ["Atsumu Miya"] = {Speed = 75, Power = 60, Jump = 70},
     ["Ushijima Wakatoshi"] = {Speed = 75, Power = 100, Jump = 80},
     ["Yamaguchi Tadashi"] = {Speed = 65, Power = 70, Jump = 65},
     ["Tsukishima Kei"] = {Speed = 70, Power = 70, Jump = 65},
     ["Hoshiumi Korai"] = {Speed = 70, Power = 80, Jump = 100},
-    ["Kenma Kozume"] = {Speed = 70, Power = 65, Jump = 70},
+    ["Kenma Kozume"] = {Speed = 75, Power = 65, Jump = 70},
 }
 
     -- Function to create an animated progress bar (adjusted for selected character)
@@ -451,13 +453,13 @@ local characterStats = {
             skill_desc:SetText("Position: Setter\n\nA setter who can deliver a powerful jump serve.") 
         elseif selectedCharacter == "Ushijima Wakatoshi" then 
             character = "ushijima"
-            skill_desc:SetText("Capable of delivering extraordinary spiking power.") 
+            skill_desc:SetText("Position: Wing Spiker\n\nCapable of delivering extraordinary spiking power.") 
         elseif selectedCharacter == "Yamaguchi Tadashi" then 
             character = "yamaguchi"
             skill_desc:SetText("Position: Middle Blocker/Pinch Server\n\nDespite lacking physical attributes, he can execute a float serve that makes the ball's landing unpredictable.")
         elseif selectedCharacter == "Tsukishima Kei" then 
             character = "tsukishima"
-            skill_desc:SetText("Able to block with an extended coverage area.")
+            skill_desc:SetText("Position: Middle Blocker\n\nAble to block with an extended coverage area.")
         elseif selectedCharacter == "Hoshiumi Korai" then 
             character = "korai"
             skill_desc:SetText("Position: Wing Spiker\n\nA highly versatile spiker who excels at setting and can achieve impressive height with a running approach.")
@@ -541,7 +543,7 @@ local characterStats = {
                 chat.AddText(Color(255,0,0),"Press M to change char\nF2 for Thirdperson\nF1 for Character Tips")  
                 character = "bokuto"
                 ClearHooks()
-                SpikePower(10,1800) 
+                SpikePower(10,1400) 
                 SpikerSignal()
                 ReceivePower(10)
                 BokutoSpike(10)
@@ -702,7 +704,7 @@ local characterStats = {
         ["materials/hud/setter.png"] = "This character has setter controls",
         ["materials/hud/smart.png"] = "This character relies on skills",
         ["materials/hud/defender.png"] = "This character has a strong blocking ability",
-        ["materials/hud/receive-specialist.png"] = "This character specializes in receiving with more controls",
+        ["materials/hud/receive-specialist.png"] = "A receive specialist that have more controls",
         -- Add more descriptions as needed
     }
 

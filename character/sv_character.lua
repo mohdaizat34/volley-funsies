@@ -111,7 +111,7 @@ net.Receive ("character_select" , function(bits , ply )
 		ply:ConCommand("playermodel_apply")
 
 	elseif character == "kenma" then 
-		CharStats(ply,300,290+jumpAdd)
+		CharStats(ply,320,290+jumpAdd)
 		ply:SetModel("models/player/summermilitary/male_02.mdl") 
 		ply:ConCommand("cl_playermodel Kenma Kozume")
 		ply:ConCommand("playermodel_apply")

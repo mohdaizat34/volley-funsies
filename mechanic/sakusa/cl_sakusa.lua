@@ -28,9 +28,9 @@ function SakusaAttack(spikepower)
 						
 						if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 115*115 then
 							ply:ConCommand("pac_event spike") 
-							//surface.PlaySound("spike.mp3")
+							surface.PlaySound("spike.mp3")
 							
-	
+                            release_ball_spike = true
                             SpikeSakusaSendToServer("strong",spikepower,ent[k],ent[k]:GetPos(),"left",allow_spike_assist) 
 
                             -- Function to check if the entity's physics object is on the ground
@@ -85,7 +85,7 @@ function SakusaAttack(spikepower)
 						if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 115*115 then
 							ply:ConCommand("pac_event spike") 
 							surface.PlaySound("spike.mp3")
-
+                            release_ball_spike = true
                             SpikeSakusaSendToServer("strong",spikepower,ent[k],ent[k]:GetPos(),"right",allow_spike_assist) 
 
                             -- Function to check if the entity's physics object is on the ground

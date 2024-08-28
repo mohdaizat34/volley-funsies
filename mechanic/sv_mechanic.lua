@@ -565,7 +565,7 @@ end
 function ReceivePosition(v,vPos,ply,position,power,arc,allow_receive_assist,allow_old_receive) 
 
 	//reposition the ball
-	local offsetInFront = ply:GetForward() * 50
+	local offsetInFront = ply:GetForward() * 10
 	local newPosition = ply:GetPos() + offsetInFront
     newPosition.z = ply:GetPos().z + 50
 
@@ -1154,7 +1154,7 @@ net.Receive ("bokuto_cut" , function(bits , ply )
 	local ent =  ents.FindByClass( "prop_physics*" )
 
 
-
+		v:GetPhysicsObject():SetMaterial("gmod_bouncy") -- Set the material to a bouncy material
 		ply:EmitSound("spike.mp3", 70, 100, 1, CHAN_AUTO ) 
 		--if(v:GetName() =='volleyball1' or v:GetName() == 'volleyball2' or v:GetName() == 'volleyball3') then 
 
@@ -1164,31 +1164,20 @@ net.Receive ("bokuto_cut" , function(bits , ply )
 			v:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR)
 		end)
 
+		v:SetPos(Vector(entityPosVect))
+		
 		if position == "left" then  
 			if v:GetPos():WithinAABox( pos3, pos4 ) then
 				ply:ChatPrint("Can't spike ball over other team area!") 
 			else  
 				ball_status = "spike"
 				if direction == "right" then 
-						
-					if power == "soft" then 
-						v:SetPos(entityPosVect)
-						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 700  + Vector(-900,0,0))
-					else 
-						ply:EmitSound("boku/spike2.mp3", 70, 100, 1, CHAN_AUTO )
-						v:SetPos(entityPosVect)
-						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 1000  + Vector(-1500,0,-200)) 
-					end 
+					ply:EmitSound("boku/bokutospike2.mp3", 70, 100, 1, CHAN_AUTO )
+					v:SetPos(entityPosVect)
+					v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 800  + Vector(900,0,-150)) 
 				else 
-					ball_status = "spike"
-					if power == "soft" then 
-		
-						
-						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 700  + Vector(900,0,0))
-					else 
-						ply:EmitSound("boku/spike2.mp3", 70, 100, 1, CHAN_AUTO )  
-						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 1500  + Vector(1500,0,-200))
-					end 
+					ply:EmitSound("boku/bokutospike2.mp3", 70, 100, 1, CHAN_AUTO )  
+					v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 800  + Vector(-900,0,-150))
 				end   
 			end 
 		else  
@@ -1197,25 +1186,11 @@ net.Receive ("bokuto_cut" , function(bits , ply )
 
 			else 
 				if direction == "left" then 
-			
-					if power == "soft" then 
-						
-						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 700  + Vector(-900,0,0))
-					else 
-				
-						ply:EmitSound("boku/spike2.mp3", 70, 100, 1, CHAN_AUTO ) 
-						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 1500  + Vector(-1500,0,-200))
-					end 
+					ply:EmitSound("boku/bokutospike2.mp3", 70, 100, 1, CHAN_AUTO ) 
+					v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 800  + Vector(900,0,-150)) 
 				else 
-					
-					if power == "soft" then
-				
-				
-						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 700  + Vector(900,0,0))
-					else 
-						ply:EmitSound("boku/spike2.mp3", 70, 100, 1, CHAN_AUTO )  
-						v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 1500  + Vector(1500,0,-200))
-					end 
+					ply:EmitSound("boku/bokutospike2.mp3", 70, 100, 1, CHAN_AUTO )  
+					v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 800  + Vector(-900,0,-150))
 				end 
 			end 
 		end 
@@ -1320,11 +1295,11 @@ net.Receive ("receive_power" , function(bits , ply )
 
 	if power == "weak" then 
 		ReceivePosition(entityBall,entBallPos,ply,position,110,400,allow_receive_assist,allow_old_receive)
-	elseif power == "strong" and character == "" then 
+	elseif power == "strong" then 
 		ReceivePosition(entityBall,entBallPos,ply,position,140,600,allow_receive_assist,allow_old_receive)
-	elseif power == "strong" and character == "kuro" then 
+	elseif power == "ultra" and character == "kuro" then 
 		ReceivePosition(entityBall,entBallPos,ply,position,100,750,allow_receive_assist,allow_old_receive)
-	elseif power == "strong" and character == "kenma" then 
+	elseif power == "ultra" and character == "kenma" then 
 		ReceivePosition(entityBall,entBallPos,ply,position,100,750,allow_receive_assist,allow_old_receive)
 	elseif power == "feint" then 
 		ReceivePosition(entityBall,entBallPos,ply,position,200,110,allow_receive_assist,allow_old_receive)
@@ -1360,7 +1335,7 @@ net.Receive("toss_power", function(bits, ply)
 						elseif power == "medium" then
 							TossPosition(v, ply, position, 100, 400, frontback,allow_set_assist)
 						else
-							TossPosition(v, ply, position, 220, 450, frontback,allow_set_assist)
+							TossPosition(v, ply, position, 300, 400, frontback,allow_set_assist)
 						end
 					end 
 				end 
@@ -1379,7 +1354,7 @@ net.Receive("toss_power", function(bits, ply)
 						elseif power == "medium" then
 							TossPosition(v, ply, position, -110, 450, frontback,allow_set_assist)
 						else 
-							TossPosition(v, ply, position, -110, 500, frontback,allow_set_assist)
+							TossPosition(v, ply, position, -120, 500, frontback,allow_set_assist)
 						end
 					end
 				end 

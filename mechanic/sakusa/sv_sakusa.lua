@@ -202,6 +202,7 @@ net.Receive ("spike_power_sakusa" , function(bits , ply )
 	    
 	local ent =  ents.FindByClass( "prop_physics*" )
 
+	
 	ply:ConCommand("pac_event spike")   
 	
 	ply:SetCollisionGroup( COLLISION_GROUP_WORLD)
@@ -213,6 +214,8 @@ end)
 
 function SpikeSakusaPosition(v,ply,position,power,arc,entityPosVect,direction,allow_spike_assist)  
 	
+	local rightVector = ply:GetRight()
+
 	v:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR) 
 	local desiredZ = ply:GetPos().z - 10
 	
@@ -232,7 +235,7 @@ function SpikeSakusaPosition(v,ply,position,power,arc,entityPosVect,direction,al
 				isSpiked = true 
 				timer.Simple(1,function() isSpiked=false end)
 
-                v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 1000 + Vector(0,0,50))
+			    v:GetPhysicsObject():SetVelocity(ply:GetAimVector() * 1000 + Vector(0,0,50))
                 v:SetPos(entityPosVect) -- Adjust the Z coordinate as needed
                 v:GetPhysicsObject():SetMaterial("gmod_bouncy") -- Set the material to a bouncy material
 
@@ -240,24 +243,28 @@ function SpikeSakusaPosition(v,ply,position,power,arc,entityPosVect,direction,al
                     v:GetPhysicsObject():SetAngles(Angle(0, 0, 0))
                     v:GetPhysicsObject():AddAngleVelocity(Vector(5000,0,5000)) 
                     timer.Simple(0.15,function() 
-                        local downwardForce = Vector(6000, 0, 0)  -- Adjust the force as needed
-						v:GetPhysicsObject():ApplyForceCenter(downwardForce)
-                        print("downward force!")
+						local leftwardForce = rightVector * -6000  -- Force applied to the left
+
+						v:GetPhysicsObject():ApplyForceCenter(leftwardForce)
+                        
                         timer.Simple(0.15,function() 
-                            local downwardForce2 = Vector(6000, 0, -50)  -- Adjust the force as needed
-                            v:GetPhysicsObject():ApplyForceCenter(downwardForce2)
+							local leftwardForce = rightVector * -6000  -- Force applied to the left
+                           	local downwardForce2 = Vector(0, 0, -50)  -- Adjust the force as needed
+                            v:GetPhysicsObject():ApplyForceCenter(leftwardForce + downwardForce2)
                         end) 
                     end)
                 else 
-                    v:GetPhysicsObject():SetAngles(Angle(0, 0, 0))
+					v:GetPhysicsObject():SetAngles(Angle(0, 0, 0))
                     v:GetPhysicsObject():AddAngleVelocity(Vector(5000,0,5000)) 
                     timer.Simple(0.15,function() 
-                        local downwardForce = Vector(-6000, 0, 0)  -- Adjust the force as needed
-						v:GetPhysicsObject():ApplyForceCenter(downwardForce)
-                        print("downward force!")
+						local leftwardForce = rightVector * 6000  -- Force applied to the left
+
+						v:GetPhysicsObject():ApplyForceCenter(leftwardForce)
+                        
                         timer.Simple(0.15,function() 
-                            local downwardForce2 = Vector(-6000, 0, -50)  -- Adjust the force as needed
-                            v:GetPhysicsObject():ApplyForceCenter(downwardForce2)
+							local leftwardForce = rightVector * 6000  -- Force applied to the left
+                           	local downwardForce2 = Vector(0, 0, -50)  -- Adjust the force as needed
+                            v:GetPhysicsObject():ApplyForceCenter(leftwardForce + downwardForce2)
                         end) 
                     end)
                 end 
@@ -325,27 +332,31 @@ function SpikeSakusaPosition(v,ply,position,power,arc,entityPosVect,direction,al
                 v:GetPhysicsObject():SetMaterial("gmod_bouncy") -- Set the material to a bouncy material
 
                 if direction == "right" then 
-                    v:GetPhysicsObject():SetAngles(Angle(0, 0, 50))
+                    v:GetPhysicsObject():SetAngles(Angle(0, 0, 0))
                     v:GetPhysicsObject():AddAngleVelocity(Vector(5000,0,5000)) 
                     timer.Simple(0.15,function() 
-                        local downwardForce = Vector(6000, 0, 0)  -- Adjust the force as needed
-						v:GetPhysicsObject():ApplyForceCenter(downwardForce)
-                        print("downward force!")
+						local leftwardForce = rightVector * 6000  -- Force applied to the left
+
+						v:GetPhysicsObject():ApplyForceCenter(leftwardForce)
+                        
                         timer.Simple(0.15,function() 
-                            local downwardForce2 = Vector(6000, 0, -50)  -- Adjust the force as needed
-                            v:GetPhysicsObject():ApplyForceCenter(downwardForce2)
+							local leftwardForce = rightVector * 6000  -- Force applied to the left
+                           	local downwardForce2 = Vector(0, 0, -50)  -- Adjust the force as needed
+                            v:GetPhysicsObject():ApplyForceCenter(leftwardForce + downwardForce2)
                         end) 
                     end)
                 else 
-                    v:GetPhysicsObject():SetAngles(Angle(0, 0, 50))
+					v:GetPhysicsObject():SetAngles(Angle(0, 0, 0))
                     v:GetPhysicsObject():AddAngleVelocity(Vector(5000,0,5000)) 
                     timer.Simple(0.15,function() 
-                        local downwardForce = Vector(-6000, 0, 0)  -- Adjust the force as needed
-						v:GetPhysicsObject():ApplyForceCenter(downwardForce)
-                        print("downward force!")
+						local leftwardForce = rightVector * -6000  -- Force applied to the left
+
+						v:GetPhysicsObject():ApplyForceCenter(leftwardForce)
+                        
                         timer.Simple(0.15,function() 
-                            local downwardForce2 = Vector(-6000, 0, -50)  -- Adjust the force as needed
-                            v:GetPhysicsObject():ApplyForceCenter(downwardForce2)
+							local leftwardForce = rightVector * -6000  -- Force applied to the left
+                           	local downwardForce2 = Vector(0, 0, -50)  -- Adjust the force as needed
+                            v:GetPhysicsObject():ApplyForceCenter(leftwardForce + downwardForce2)
                         end) 
                     end)
                 end 

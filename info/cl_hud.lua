@@ -158,11 +158,12 @@ hook.Add("PlayerButtonDown", "Hide Control Panel", function(ply, button)
 end)
 
 
-
+power_level_receive_special = {"Low","High","Ultra"}
 power_level_receive = {"Low","High"}
 power_level_spike = {"Low","High"}
 power_level_toss = {"Front","Back"}
 
+set_power_level_receive_special = power_level_receive_special[1] -- Default power level for "Receive SPECIAL" mode
 set_power_level_receive = power_level_receive[1] -- Default power level for "Receive" mode
 set_power_level_spike = power_level_spike[1] -- Default power level for "Spike" mode
 set_power_level_toss = power_level_toss[1] -- Default power level for "Spike" mode
@@ -216,13 +217,26 @@ hook.Add("HUDPaint", "ModePower", function()
         draw.DrawText("", "Trebuchet24",ScrW()/2.2, ScrH()/1.29, Color(255, 242, 0))
     end 
 
-    -- Power Level for Receive mode
-    if set_power_level_receive == power_level_receive[1] then
-        draw.DrawText(power_level_receive[1], "Trebuchet24", ScrW() / 10.67, ScrH() / 1.09, Color(255, 224, 70))
-    elseif set_power_level_receive == power_level_receive[2] then
-        draw.DrawText(power_level_receive[2], "Trebuchet24",  ScrW() / 10.67, ScrH() / 1.09, Color(255, 54, 54))
-    end
 
+    --Receve Special Level
+    if character == "kuro" or character == "kenma" then 
+        if set_power_level_receive_special == power_level_receive_special[1] then
+            draw.DrawText(power_level_receive_special[1], "Trebuchet24", ScrW() / 10.67, ScrH() / 1.09, Color(255, 224, 70))
+        elseif set_power_level_receive_special == power_level_receive_special[2] then
+            draw.DrawText(power_level_receive_special[2], "Trebuchet24",  ScrW() / 10.67, ScrH() / 1.09, Color(255, 136, 0))
+        elseif set_power_level_receive_special == power_level_receive_special[3] then
+            draw.DrawText(power_level_receive_special[3], "Trebuchet24",  ScrW() / 10.67, ScrH() / 1.09, Color(255, 0, 0))
+        end
+    else 
+        -- Power Level for Receive mode
+        if set_power_level_receive == power_level_receive[1] then
+            draw.DrawText(power_level_receive[1], "Trebuchet24", ScrW() / 10.67, ScrH() / 1.09, Color(255, 224, 70))
+        elseif set_power_level_receive == power_level_receive[2] then
+            draw.DrawText(power_level_receive[2], "Trebuchet24",  ScrW() / 10.67, ScrH() / 1.09, Color(255, 54, 54))
+        end
+
+    end 
+    
     -- Power Level for Spike mode
     if set_power_level_spike == power_level_spike[1] then
         draw.DrawText(power_level_spike[1], "Trebuchet24", ScrW() / 10.67, ScrH() / 1.17, Color(255, 224, 70))
@@ -278,12 +292,25 @@ hook.Add("PlayerButtonDown", "setMode", function(ply, button)
     -- Update the time of the last press
     lastModePressTime = CurTime()
 
-    if set_power_level_receive == power_level_receive[1] then -- if low
-        set_power_level_receive = power_level_receive[2]  -- set high 
-        print("power level (Receive): "..set_power_level_receive)
-    elseif set_power_level_receive == power_level_receive[2] then  -- if high
-        set_power_level_receive = power_level_receive[1] -- set low
-        print("power level (Receive): "..set_power_level_receive)
+    if character == "kuro" or character == "kenma" then 
+        if set_power_level_receive_special == power_level_receive_special[1] then
+            set_power_level_receive_special = power_level_receive_special[2]  -- set high 
+            print("power level (Receive): "..set_power_level_receive)
+        elseif set_power_level_receive_special == power_level_receive_special[2] then  -- if high
+            set_power_level_receive_special = power_level_receive_special[3] -- set low
+            print("power level (Receive): "..set_power_level_receive)
+        elseif set_power_level_receive_special == power_level_receive_special[3] then  -- if high
+            set_power_level_receive_special = power_level_receive_special[1] -- set low
+            print("power level (Receive): "..set_power_level_receive)
+        end 
+    else
+        if set_power_level_receive == power_level_receive[1] then -- if low
+            set_power_level_receive = power_level_receive[2]  -- set high 
+            print("power level (Receive): "..set_power_level_receive)
+        elseif set_power_level_receive == power_level_receive[2] then  -- if high
+            set_power_level_receive = power_level_receive[1] -- set low
+            print("power level (Receive): "..set_power_level_receive)
+        end 
     end 
 end)
 

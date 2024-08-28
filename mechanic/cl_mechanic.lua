@@ -974,18 +974,23 @@ end
 -- 					SpikeSendToServer("weak",spikepower,ent[k],ent[k]:GetPos(),allow_spike_assist)
 
 function BokutoSpike(setForce)
+
 	ply = LocalPlayer() 
-	pb_left = 0  
-	leftpower = 0 
-	leftbuttonpress = 0 
+	powerbar = 0  
+	power = 0 
+	jumpcount = 0 
+	buttonpress = 0 
+	local ent =  ents.FindByClass( "prop_physics*" )
 
-	pb_right = 0  
-	rightpower = 0 
-	rightbuttonpress = 0 
-
+	--spikepower = 0 
+	--jumpcount = 0 
+	buttonpressrec = 0 
+	local ply = LocalPlayer() 
+	local release_ball_spike = false  
 
 	
-	hook.Add( "Tick", "keydownboku", function()
+	hook.Add( "Tick", "Bokuto_Cut", function()
+	
 		local ent =  ents.FindByClass( "prop_physics*" )
 		local keySettingR,keySettingT 
 
@@ -998,81 +1003,114 @@ function BokutoSpike(setForce)
 		end
 
 
-		if (input.IsButtonDown(keySettingR)) then
-			leftbuttonpress = 1 
-			MainFrame2:SetVisible(true)
-			leftpower = leftpower + 1 
-			pb_left = pb_left + 0.05 
-			DProgress:SetFraction( pb_left )
-
-		else 
-			if leftbuttonpress == 0 then 
-
-			elseif leftbuttonpress == 1 then 
-				leftbuttonpress = 0 
-				MainFrame2:SetVisible(false)
-				for k, v in pairs( ent ) do   
-					if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 120*120 then
-	
-						if leftpower < setForce then 
-			
-							LocalPlayer():ConCommand("pac_event spike") 
-							CutSendToServer("left","soft",ent[k])
-							leftpower = 0
-							pb_left = 0 
-							DProgress:SetFraction( pb_left )  
-
-						else 
-
-							LocalPlayer():ConCommand("pac_event spike") 
-							CutSendToServer("left","power",ent[k])
-							leftpower = 0  
-							pb_left = 0 
-							DProgress:SetFraction( pb_left ) 
-						end 
-					end 
-				end  
-				leftpower = 0
-				pb_left = 0 
-				DProgress:SetFraction( pb_left )  
-			end 
-		end  
-
-
-		if (input.IsButtonDown(keySettingT)) then
-			rightbuttonpress = 1 
-			MainFrame2:SetVisible(true)
-			rightpower = rightpower + 1 
-			pb_right = pb_right + 0.04 
-			DProgress:SetFraction( pb_right )
-
-		else 
-			if rightbuttonpress == 0 then 
-
-			elseif rightbuttonpress == 1 then 
-				rightbuttonpress = 0 
-				MainFrame2:SetVisible(false)
-				for k, v in pairs( ent ) do   
-					if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 115*115 then
-	
-						if rightpower < setForce then 
-			
-							LocalPlayer():ConCommand("pac_event spike") 
-							CutSendToServer("right","soft",ent[k])
-							rightpower = 0
-							pb_right = 0 
-							DProgress:SetFraction( pb_right )  
-
-						else 
+		if !ply:IsOnGround()  then
+			if release_ball_spike == false then 
+				if (input.IsButtonDown(keySettingR)) then
+					local ent =  ents.FindByClass( "prop_physics*" )
+					for k, v in pairs( ent ) do    
+						if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 115*115 then
+							print("ADAAAA")
+							ply:ConCommand("pac_event spike") 
+							surface.PlaySound("spike.mp3")
 							
-							LocalPlayer():ConCommand("pac_event spike") 
+                            release_ball_spike = true
+                            --SpikeSakusaSendToServer("strong",spikepower,ent[k],ent[k]:GetPos(),"left",allow_spike_assist) 
 							CutSendToServer("right","power",ent[k])
-							rightpower = 0  
-							pb_right = 0 
-							DProgress:SetFraction( pb_right ) 
-						end 
-					end 
-				end  
+                            -- Function to check if the entity's physics object is on the ground
+                            function IsEntityOnGround(entity)
+                                -- Get the position of the entity
+                                local posBall = entity:GetPos()
+                                
+                                -- Trace a line downward to check for ground collision
+                                local traceBall = util.TraceLine({
+                                    start = posBall,
+                                    endpos = posBall - Vector(0, 0, 23), -- Adjust the length based on your needs
+                                    mask = MASK_OPAQUE
+                                })
+                                
+                                -- Return true if the trace hits the ground, false otherwise
+                                return traceBall.Hit
+                            end
+
+
+
+                            -- Function to check if the entity's physics object is on the ground and create a ground marker if so
+                            function BallGroundCheck() 
+                                -- Usage example
+                                if IsEntityOnGround(ent[k]) then
+                                    hook.Remove("Think", "BallChecker") -- Remove the hook as it's no longer needed
+                                    net.Start("BallHitGround")
+                                    net.WriteVector(ent[k]:GetPos())
+                                    net.WriteEntity(ent[k])
+                                    net.SendToServer()
+                                    --CreateGroundMarker(ent[k]:GetPos()) -- Create a ground marker at the position of the entity
+                                else
+                                    hook.Add("Think", "BallChecker", BallGroundCheck) -- Add the hook to keep checking
+                                end
+                            end 
+
+                            -- Start checking if the ball is on the ground
+                            BallGroundCheck()
+							
+							timer.Simple(1,function() release_ball_spike = false end)
+						end	
+					end	
+
+				elseif (input.IsButtonDown(keySettingT)) then
+					//action_status = ""
+                    release_ball_spike = false
+					//action_status = "SPIKING"
+					-- detect ball when hold button
+					local ent =  ents.FindByClass( "prop_physics*" )
+					for k, v in pairs( ent ) do    
+						physObj = ent[k]:GetPhysicsObject()
+
+						
+						if LocalPlayer():GetPos():DistToSqr( ent[k]:GetPos() ) < 115*115 then
+							ply:ConCommand("pac_event spike") 
+							surface.PlaySound("spike.mp3")
+                            release_ball_spike = true
+							CutSendToServer("left","power",ent[k])
+                            -- Function to check if the entity's physics object is on the ground
+                            function IsEntityOnGround(entity)
+                                -- Get the position of the entity
+                                local posBall = entity:GetPos()
+                                
+                                -- Trace a line downward to check for ground collision
+                                local traceBall = util.TraceLine({
+                                    start = posBall,
+                                    endpos = posBall - Vector(0, 0, 23), -- Adjust the length based on your needs
+                                    mask = MASK_OPAQUE
+                                })
+                                
+                                -- Return true if the trace hits the ground, false otherwise
+                                return traceBall.Hit
+                            end
+
+
+
+                            -- Function to check if the entity's physics object is on the ground and create a ground marker if so
+                            function BallGroundCheck() 
+                                -- Usage example
+                                if IsEntityOnGround(ent[k]) then
+                                    hook.Remove("Think", "BallChecker") -- Remove the hook as it's no longer needed
+                                    net.Start("BallHitGround")
+                                    net.WriteVector(ent[k]:GetPos())
+                                    net.WriteEntity(ent[k])
+                                    net.SendToServer()
+                                    --CreateGroundMarker(ent[k]:GetPos()) -- Create a ground marker at the position of the entity
+                                else
+                                    hook.Add("Think", "BallChecker", BallGroundCheck) -- Add the hook to keep checking
+                                end
+                            end 
+
+                            -- Start checking if the ball is on the ground
+                            BallGroundCheck()
+						
+							timer.Simple(1,function() release_ball_spike = false end)
+						end	
+					end	
+				end 
 			end 
 		end  
 	end) 
@@ -1279,10 +1317,20 @@ function ReceivePower(setForce)
 
 								--print("detect ball")
 								release_ball = true
-								if set_power_level_receive == power_level_receive[1] then
-									ReceiveSendToServer("weak",ent[k],false)
-								else 
-									ReceiveSendToServer("strong",ent[k],false)
+								if character == "kuro" or character == "kenma" then 
+									if set_power_level_receive_special == power_level_receive_special[1] then
+										ReceiveSendToServer("weak",ent[k],false)
+									elseif set_power_level_receive_special == power_level_receive_special[2] then
+										ReceiveSendToServer("strong",ent[k],false)
+									else 
+										ReceiveSendToServer("ultra",ent[k],false)
+									end 
+								else
+									if set_power_level_receive == power_level_receive[1] then
+										ReceiveSendToServer("weak",ent[k],false)
+									else 
+										ReceiveSendToServer("strong",ent[k],false)
+									end 
 								end 
 
 								timer.Simple(1,function() release_ball = false end)

@@ -52,69 +52,69 @@ hook.Add("PlayerButtonDown","anim",function(ply,button)
 end)
 
 
---print("this is cl is working fine ")
-local FirstFrame = vgui.Create("DFrame") 
-FirstFrame:SetSize(1366,768)
-FirstFrame:SetTitle("This gamemode is created by Hope")    
-FirstFrame:SetVisible(true) 
-FirstFrame:SetBackgroundBlur( true )
-FirstFrame:ShowCloseButton(true) 
-FirstFrame:Center()  
-FirstFrame:MakePopup(true)
-FirstFrame.Paint = function( self, w, h ) -- 'function Frame:Paint( w, h )' works too
-draw.RoundedBox( 0, 0, 0, w, h, Color( 255,255,255,255) ) -- Draw a black box instead of the frame
-end
+-- --print("this is cl is working fine ")
+-- local FirstFrame = vgui.Create("DFrame") 
+-- FirstFrame:SetSize(1366,768)
+-- FirstFrame:SetTitle("This gamemode is created by Hope")    
+-- FirstFrame:SetVisible(true) 
+-- FirstFrame:SetBackgroundBlur( true )
+-- FirstFrame:ShowCloseButton(true) 
+-- FirstFrame:Center()  
+-- FirstFrame:MakePopup(true)
+-- FirstFrame.Paint = function( self, w, h ) -- 'function Frame:Paint( w, h )' works too
+-- draw.RoundedBox( 0, 0, 0, w, h, Color( 255,255,255,255) ) -- Draw a black box instead of the frame
+-- end
 
-function FirstFrame:Init() 
-	self.startTime = SysTime() 
-end    
-function FirstFrame:Paint() 
-	Derma_DrawBackgroundBlur( self, self.startTime ) 
-end
+-- function FirstFrame:Init() 
+-- 	self.startTime = SysTime() 
+-- end    
+-- function FirstFrame:Paint() 
+-- 	Derma_DrawBackgroundBlur( self, self.startTime ) 
+-- end
  
-local StartButton = vgui.Create( "DButton", FirstFrame ) 
-StartButton:Dock(FILL)
-StartButton:SetText("Press Anywhere")  
-StartButton:SetTextColor(Color(255,255,255))  
-StartButton:DockMargin( 0, 50 , 0, 0 )
-StartButton:SetFont("Big2") 
-StartButton.Paint = function( self, w, h ) -- 'function Frame:Paint( w, h )' works too
-draw.RoundedBox( 0, 0, 0, w, h, Color( 0,0,0,0) )    
-end
+-- local StartButton = vgui.Create( "DButton", FirstFrame ) 
+-- StartButton:Dock(FILL)
+-- StartButton:SetText("Press Anywhere")  
+-- StartButton:SetTextColor(Color(255,255,255))  
+-- StartButton:DockMargin( 0, 50 , 0, 0 )
+-- StartButton:SetFont("Big2") 
+-- StartButton.Paint = function( self, w, h ) -- 'function Frame:Paint( w, h )' works too
+-- draw.RoundedBox( 0, 0, 0, w, h, Color( 0,0,0,0) )    
+-- end
 
-local pinkblackText = vgui.Create( "DButton", FirstFrame ) 
-pinkblackText:Dock(BOTTOM)
-pinkblackText:SetText("If you experience purple & black texture click here and rejoin")  
-pinkblackText:SetTextColor(Color(255,255,255))  
-pinkblackText:DockMargin( 0, 50 , 0, 0 )
-pinkblackText:SetFont("Trebuchet24") 
-pinkblackText.Paint = function( self, w, h ) -- 'function Frame:Paint( w, h )' works too
-draw.RoundedBox( 0, 0, 0, w, h, Color( 232,33,33,88) )    
-end
-pinkblackText.DoClick = function()
-	--sound3:Stop()
-	gui.OpenURL( "https://steamcommunity.com/workshop/filedetails/?id=1933957019" )
-end
+-- local pinkblackText = vgui.Create( "DButton", FirstFrame ) 
+-- pinkblackText:Dock(BOTTOM)
+-- pinkblackText:SetText("If you experience purple & black texture click here and rejoin")  
+-- pinkblackText:SetTextColor(Color(255,255,255))  
+-- pinkblackText:DockMargin( 0, 50 , 0, 0 )
+-- pinkblackText:SetFont("Trebuchet24") 
+-- pinkblackText.Paint = function( self, w, h ) -- 'function Frame:Paint( w, h )' works too
+-- draw.RoundedBox( 0, 0, 0, w, h, Color( 232,33,33,88) )    
+-- end
+-- pinkblackText.DoClick = function()
+-- 	--sound3:Stop()
+-- 	gui.OpenURL( "https://steamcommunity.com/workshop/filedetails/?id=1933957019" )
+-- end
 
-local hide = {
-	["CHudHealth"] = true,
-	["CHudBattery"] = true
-}
+-- local hide = {
+-- 	["CHudHealth"] = true,
+-- 	["CHudBattery"] = true
+-- }
 
-hook.Add( "HUDShouldDraw", "HideHUD", function( name )
-	if ( hide[ name ] ) then return false end
+-- hook.Add( "HUDShouldDraw", "HideHUD", function( name )
+-- 	if ( hide[ name ] ) then return false end
 
-	-- Don't return anything here, it may break other addons that rely on this hook.
-end ) 
+-- 	-- Don't return anything here, it may break other addons that rely on this hook.
+-- end ) 
 
-function StartButton:DoClick()
-	--hook.Add("Think","check_selected",function()
-	--timer.Start("check_status",1,0,function() 
-	--end) 
-	FirstFrame:Close()
+-- function StartButton:DoClick()
+-- 	--hook.Add("Think","check_selected",function()
+-- 	--timer.Start("check_status",1,0,function() 
+-- 	--end) 
+-- 	FirstFrame:Close()
 
-	//MenuFrame() 
-end 
+-- 	//MenuFrame() 
+-- end 
 
 function MenuFrame() 
 	//load pastebin animation 
@@ -1284,17 +1284,6 @@ function ref:DoClick()
 		end 
 	end) 
 end 
-
-
-hook.Add("PlayerButtonDown","openMenu",function(ply,button)
-	if button == KEY_M then 
-
-		BottomPanel:SetVisible(true)
-		character = ""
-
-		MainFrame2:SetVisible(true)
-	end 
-end)
 
 
 -- reminder 

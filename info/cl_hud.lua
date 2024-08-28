@@ -378,7 +378,7 @@ end)
 --// End Start Serve line detection //--------------
 
 team.SetUp( 1, "Blue", Color( 71, 255, 227 ) ) 
-team.SetUp( 2, "Green", Color( 117, 255, 48) ) 
+team.SetUp( 2, "Green", Color( 255, 83, 83) ) 
 
 function DrawAdminIndicator(ply,char)
 	local zOffset = 80

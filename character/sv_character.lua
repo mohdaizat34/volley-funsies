@@ -75,19 +75,19 @@ net.Receive ("character_select" , function(bits , ply )
 		ply:ConCommand("playermodel_apply") 
 
 	elseif character == "kage" then 
-		CharStats(ply,280,308+jumpAdd)
+		CharStats(ply,320,308+jumpAdd)
 		ply:SetModel("models/haikyuu/male/kageyama2.mdl")  
 		ply:ConCommand("cl_playermodel Kageyama Tobio V2")
 		ply:ConCommand("playermodel_apply")
 
 	elseif character == "miya" then 
-		CharStats(ply,280,308+jumpAdd)
+		CharStats(ply,320,308+jumpAdd)
 		ply:SetModel("models/player/summermilitary/male_02.mdl")
 		ply:ConCommand("cl_playermodel Miya Atsumu") 
 		ply:ConCommand("playermodel_apply")
 
 	elseif character == "ushi" then 
-		CharStats(ply,312,315+jumpAdd)
+		CharStats(ply,280,315+jumpAdd)
 		ply:SetModel("models/player/summermilitary/male_02.mdl") 
 		ply:ConCommand("cl_playermodel Wakatoshi Ushijima")
 		ply:ConCommand("playermodel_apply")
@@ -99,25 +99,25 @@ net.Receive ("character_select" , function(bits , ply )
 		ply:ConCommand("playermodel_apply")
 		
 	elseif character == "yama" then 
-		CharStats(ply,260,300+jumpAdd)
+		CharStats(ply,300,300+jumpAdd)
 		ply:SetModel("models/player/summermilitary/male_02.mdl") 
 		ply:ConCommand("cl_playermodel Tadashi Yamaguchi")
 		ply:ConCommand("playermodel_apply") 
 
 	elseif character == "bokuto" then 
-		CharStats(ply,280,320+jumpAdd)
+		CharStats(ply,280,315+jumpAdd)
 		ply:SetModel("models/player/summermilitary/male_02.mdl") 
 		ply:ConCommand("cl_playermodel Kotaro Bokuto")
 		ply:ConCommand("playermodel_apply")
 
 	elseif character == "kenma" then 
-		CharStats(ply,280,290+jumpAdd)
+		CharStats(ply,300,290+jumpAdd)
 		ply:SetModel("models/player/summermilitary/male_02.mdl") 
 		ply:ConCommand("cl_playermodel Kenma Kozume")
 		ply:ConCommand("playermodel_apply")
 
 	elseif character == "tsuki" then 
-		CharStats(ply,280,300+jumpAdd)
+		CharStats(ply,300,300+jumpAdd)
 		ply:SetModel("models/player/summermilitary/male_02.mdl") 
 		ply:ConCommand("cl_playermodel Kei Tsukishima")
 		ply:ConCommand("playermodel_apply")
